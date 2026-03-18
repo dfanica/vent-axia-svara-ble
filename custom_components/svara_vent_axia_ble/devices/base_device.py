@@ -350,14 +350,14 @@ class BaseDevice:
     async def getMode(self) -> str:
         v = unpack("<B", await self._readUUID(self.chars[CHARACTERISTIC_MODE]))
         if v[0] == 0:
-            return "MultiMode"
+            return "multimode"
         elif v[0] == 1:
-            return "DraftShutterMode"
+            return "draft_shutter_mode"
         elif v[0] == 2:
-            return "WallSwitchExtendedRuntimeMode"
+            return "wall_switch_extended_runtime_mode"
         elif v[0] == 3:
-            return "WallSwitchNoExtendedRuntimeMode"
+            return "wall_switch_no_extended_runtime_mode"
         elif v[0] == 4:
-            return "HeatDistributionMode"
+            return "heat_distribution_mode"
         else:
             return "Unknown: " + str(v[0])

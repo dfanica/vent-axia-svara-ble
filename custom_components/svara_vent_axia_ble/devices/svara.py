@@ -152,19 +152,19 @@ class SvaraDevice(BaseDevice):
         v = unpack("<4HBHB", await self._readUUID(self.chars[CHARACTERISTIC_SENSOR_DATA]))
         _LOGGER.debug("Read fan states: %s", v)
 
-        trigger = "No trigger"
+        trigger = "no_trigger"
         if v[3] == 0:
-            trigger = "Idle"
+            trigger = "idle"
         elif ((v[4] >> 4) & 1) == 1:
-            trigger = "Boost"
+            trigger = "boost"
         elif ((v[4] >> 6) & 3) == 3:
-            trigger = "Switch"
+            trigger = "switch"
         elif (v[4] & 3) == 1:
-            trigger = "Trickle ventilation"
+            trigger = "trickle_ventilation"
         elif (v[4] & 3) == 2:
-            trigger = "Light ventilation"
+            trigger = "light_ventilation"
         elif (v[4] & 3) == 3:
-            trigger = "Humidity ventilation"
+            trigger = "humidity_ventilation"
 
         return FanState(
             round(math.log2(v[0] - 30) * 10, 2) if v[0] > 30 else 0,
@@ -260,8 +260,8 @@ class SvaraDevice(BaseDevice):
     async def setLightSensorSettings(self, delayed, running) -> None:
         if delayed < 0 or delayed > 10:
             raise ValueError("Delayed must be between 0 and 10 minutes")
-        if running not in (5, 10, 15, 30, 60):
-            raise ValueError("Running time must be 5, 10, 15, 30 or 60 minutes")
+        if running < 5 or running > 60:
+            raise ValueError("Running time must be between 5 and 60 minutes")
 
         await self._writeUUID(
             self.chars[CHARACTERISTIC_TIME_FUNCTIONS], pack("<2B", delayed, running)

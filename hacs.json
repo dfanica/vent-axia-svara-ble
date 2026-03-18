@@ -1,5 +1,6 @@
 {
-  "name": "Vent-Axia Svara",
+  "name": "Vent-Axia Svara BLE",
+  "homeassistant": "2024.5.0",
   "render_readme": true,
-  "country": ["GB", "IE", "SE", "NO"]
+  "country": ["GB", "IE"]
 }

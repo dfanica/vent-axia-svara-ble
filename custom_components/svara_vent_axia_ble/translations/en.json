@@ -65,10 +65,26 @@
         "name": "Flow"
       },
       "state": {
-        "name": "Fan State"
+        "name": "Fan State",
+        "state": {
+          "no_trigger": "No trigger",
+          "idle": "Idle",
+          "boost": "Boost",
+          "switch": "Switch",
+          "trickle_ventilation": "Trickle ventilation",
+          "light_ventilation": "Light ventilation",
+          "humidity_ventilation": "Humidity ventilation"
+        }
       },
       "mode": {
-        "name": "Mode"
+        "name": "Mode",
+        "state": {
+          "multimode": "MultiMode",
+          "draft_shutter_mode": "DraftShutterMode",
+          "wall_switch_extended_runtime_mode": "WallSwitchExtendedRuntimeMode",
+          "wall_switch_no_extended_runtime_mode": "WallSwitchNoExtendedRuntimeMode",
+          "heat_distribution_mode": "HeatDistributionMode"
+        }
       },
       "pin_confirmed": {
         "name": "PIN Confirmed"
@@ -146,6 +162,29 @@
       "silenthours_endtime": {
         "name": "Silent Hours Stop Time"
       }
+    }
+  },
+  "exceptions": {
+    "automatic_cycles_range": {
+      "message": "Setting must be between 0-3"
+    },
+    "fan_speed_multiple_of_25": {
+      "message": "Speeds should be multiples of 25"
+    },
+    "fan_speed_range": {
+      "message": "Speeds must be between 0 and 2500 rpm"
+    },
+    "light_sensor_delay_range": {
+      "message": "Delayed must be between 0 and 10 minutes"
+    },
+    "light_sensor_running_time_range": {
+      "message": "Running time must be between 5 and 60 minutes"
+    },
+    "humidity_sensitivity_range": {
+      "message": "Humidity sensitivity must be between 0-3"
+    },
+    "light_sensitivity_range": {
+      "message": "Light sensitivity must be between 0-3"
     }
   }
 }
