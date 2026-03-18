@@ -1,0 +1,12 @@
+{
+  "domain": "svara_vent_axia_ble",
+  "name": "Vent-Axia Svara",
+  "config_flow": true,
+  "dependencies": ["bluetooth"],
+  "documentation": "https://github.com/danielfanica/vent-axia-svara-ble",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/danielfanica/vent-axia-svara-ble/issues",
+  "loggers": ["custom_components.svara_vent_axia_ble"],
+  "requirements": ["bleak-retry-connector>=3.7.0"],
+  "version": "0.1.0"
+}

@@ -1,0 +1,151 @@
+{
+  "title": "Vent-Axia Svara",
+  "config": {
+    "step": {
+      "add_device": {
+        "title": "Add Vent-Axia Svara fan",
+        "description": "{entry_action}. Enter the fan details from the device sticker.",
+        "data": {
+          "name": "Device name",
+          "mac": "MAC address (aa:bb:cc:dd:ee:ff)",
+          "pin": "PIN code",
+          "scan_interval": "Scan interval in seconds",
+          "scan_interval_fast": "Fast scan interval in seconds"
+        }
+      }
+    },
+    "error": {
+      "wrong_pin_or_cannot_connect": "Failed to connect or validate the supplied PIN"
+    },
+    "abort": {
+      "device_already_configured": "Device {dev_name} is already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Global Configuration",
+        "description": "These settings apply to all connected devices [{device_count} connected].",
+        "data": {
+          "integration_title": "Integration name",
+          "clock_sync": "Clock sync",
+          "scan_interval": "Scan interval in seconds",
+          "scan_interval_fast": "Fast scan interval in seconds"
+        }
+      }
+    }
+  },
+  "services": {
+    "request_update": {
+      "name": "Request value update",
+      "description": "Trigger an immediate refresh for a specific device.",
+      "fields": {
+        "device_id": {
+          "name": "Device ID",
+          "description": "The device for which to update values."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "humidity": {
+        "name": "Humidity"
+      },
+      "temperature": {
+        "name": "Temperature"
+      },
+      "light": {
+        "name": "Light"
+      },
+      "rpm": {
+        "name": "Fan Speed"
+      },
+      "flow": {
+        "name": "Flow"
+      },
+      "state": {
+        "name": "Fan State"
+      },
+      "mode": {
+        "name": "Mode"
+      },
+      "pin_confirmed": {
+        "name": "PIN Confirmed"
+      },
+      "led_raw": {
+        "name": "LED Raw"
+      },
+      "status_raw": {
+        "name": "Status Raw"
+      },
+      "factory_settings_changed": {
+        "name": "Factory Settings Changed"
+      },
+      "clock": {
+        "name": "Clock"
+      },
+      "alias": {
+        "name": "Alias"
+      }
+    },
+    "switch": {
+      "boostmode": {
+        "name": "Boost Mode"
+      },
+      "trickle_continuous": {
+        "name": "Trickle Continuous",
+        "description": "Keeps the fan running continuously at a low speed"
+      },
+      "trickledays_weekdays": {
+        "name": "Trickle Weekdays"
+      },
+      "trickledays_weekends": {
+        "name": "Trickle Weekends"
+      },
+      "silenthours_on": {
+        "name": "Silent Hours"
+      }
+    },
+    "select": {
+      "sensitivity_humidity": {
+        "name": "Sensitivity Humidity"
+      },
+      "automatic_cycles": {
+        "name": "Airing Function Cycle"
+      },
+      "boostmodesecwrite": {
+        "name": "Boost Duration"
+      },
+      "boostmodespeedwrite": {
+        "name": "Fan Speed Boost"
+      },
+      "fanspeed_humidity": {
+        "name": "Fan Speed Humidity"
+      },
+      "fanspeed_light": {
+        "name": "Fan Speed Light"
+      },
+      "fanspeed_trickle": {
+        "name": "Fan Speed Trickle"
+      },
+      "sensitivity_light": {
+        "name": "Sensitivity Light"
+      },
+      "lightsensorsettings_delayedstart": {
+        "name": "Light Sensor Delayed Start"
+      },
+      "lightsensorsettings_runningtime": {
+        "name": "Light Sensor Running Time"
+      }
+    },
+    "time": {
+      "silenthours_starttime": {
+        "name": "Silent Hours Start Time"
+      },
+      "silenthours_endtime": {
+        "name": "Silent Hours Stop Time"
+      }
+    }
+  }
+}
