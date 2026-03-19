@@ -32,7 +32,7 @@ Other Vent-Axia or related BLE products should be treated as unsupported unless 
 1. Open HACS in Home Assistant.
 2. Go to `Integrations`.
 3. Open the menu, then select `Custom repositories`.
-4. Add `https://github.com/danielfanica/vent-axia-svara-ble` as an `Integration`.
+4. Add `https://github.com/dfanica/vent-axia-svara-ble` as an `Integration`.
 5. Search for `Vent-Axia Svara BLE`.
 6. Install the integration and restart Home Assistant.
 

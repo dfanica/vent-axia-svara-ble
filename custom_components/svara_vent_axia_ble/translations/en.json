@@ -110,8 +110,7 @@
         "name": "Boost Mode"
       },
       "trickle_continuous": {
-        "name": "Trickle Continuous",
-        "description": "Keeps the fan running continuously at a low speed"
+        "name": "Trickle Continuous"
       },
       "trickledays_weekdays": {
         "name": "Trickle Weekdays"

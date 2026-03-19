@@ -1,9 +1,9 @@
 {
   "domain": "svara_vent_axia_ble",
   "name": "Vent-Axia Svara BLE",
+  "codeowners": ["@dfanica"],
   "config_flow": true,
   "dependencies": ["bluetooth"],
-  "codeowners": ["@dfanica"],
   "documentation": "https://github.com/dfanica/vent-axia-svara-ble",
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/dfanica/vent-axia-svara-ble/issues",
