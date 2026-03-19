@@ -9,5 +9,5 @@
   "issue_tracker": "https://github.com/dfanica/vent-axia-svara-ble/issues",
   "loggers": ["custom_components.svara_vent_axia_ble"],
   "requirements": ["bleak-retry-connector>=3.7.0"],
-  "version": "1.0.0"
+  "version": "1.0.1"
 }
