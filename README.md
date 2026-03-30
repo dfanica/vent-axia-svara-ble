@@ -6,7 +6,7 @@ Unofficial Home Assistant integration for Vent-Axia Svara fans over Bluetooth Lo
 
 ## Release
 
-`v1.0.1` is the current HACS-ready release of this integration.
+`v1.0.2` is the current HACS-ready release of this integration.
 
 ## Features
 

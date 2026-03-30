@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.0.2
+
+- Added device action buttons for `Refresh Now` and `Sync Clock` in Home Assistant.
+- Hardened BLE disconnect handling so intentional disconnects, delayed callbacks, and stale client callbacks do not trigger false reconnect/failure paths.
+- Simplified clock sync so all writes go through one tracked path, initial sync no longer causes an immediate duplicate write, and periodic sync failures do not fail healthy sensor refreshes.
+- Expanded behavior tests to cover clock-sync cadence, manual clock sync, grouped writes, button actions, and BLE disconnect edge cases.
+
 ## v1.0.1
 
 - Updated release metadata and documentation for HACS publication readiness.

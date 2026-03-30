@@ -66,3 +66,10 @@ class SelectDescription(BaseSvaraEntityDescription):
     """Select entity description."""
 
     options: dict[str, str] | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class ButtonDescription(BaseSvaraEntityDescription):
+    """Button entity description."""
+
+    action: str = ""

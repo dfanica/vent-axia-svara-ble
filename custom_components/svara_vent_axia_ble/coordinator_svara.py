@@ -35,6 +35,7 @@ class SvaraCoordinator(BaseCoordinator):
         self._initial_clock_sync_attempted = False
         self._clock_sync_enabled = clock_sync_enabled
         self._initial_alias_sync_attempted = False
+        self._last_periodic_clock_sync = None
 
     async def _update_diagnostics_state(self) -> None:
         """Refresh cached diagnostic values exposed through Home Assistant."""
@@ -82,13 +83,56 @@ class SvaraCoordinator(BaseCoordinator):
             self.devicename,
             now.isoformat(),
         )
+        await self._write_current_time(now, authorize=False)
+        await self._fan.log_diagnostics("after_clock_sync")
+
+    async def _maybe_sync_periodic_clock(self) -> None:
+        """Refresh the device clock on the normal polling cadence."""
+        if not self._clock_sync_enabled:
+            return
+
+        try:
+            await self._sync_clock()
+        except Exception as err:
+            _LOGGER.debug(
+                "Periodic clock sync failed for %s without failing sensor refresh: %s",
+                self.devicename,
+                err,
+            )
+
+    async def _write_current_time(self, now, *, authorize: bool) -> None:
+        """Write a specific timestamp to the device and track last sync."""
+        if authorize:
+            await self._fan.authorize()
         await self._fan.setTime(
             now.isoweekday(),
             now.hour,
             now.minute,
             now.second,
         )
-        await self._fan.log_diagnostics("after_clock_sync")
+        self._last_periodic_clock_sync = now
+
+    async def _sync_clock(self) -> None:
+        """Write the current Home Assistant time to the device."""
+        now = dt_util.now()
+        await self._write_current_time(now, authorize=True)
+
+    async def async_sync_clock(self) -> bool:
+        """Synchronize the device clock on demand."""
+        try:
+            if not await self._safe_connect():
+                _LOGGER.debug("Cannot sync clock: not connected to %s", self.devicename)
+                return False
+
+            now = dt_util.now()
+            _LOGGER.debug("Syncing device clock for %s to %s", self.devicename, now.isoformat())
+            await self._sync_clock()
+            await self._update_diagnostics_state()
+            self.setFastPollMode()
+            return True
+        except Exception as err:
+            _LOGGER.debug("Error syncing clock for %s: %s", self.devicename, err)
+            return False
 
     async def read_sensordata(self, disconnect=False) -> bool:
         _LOGGER.debug("Reading Svara sensor data")
@@ -103,6 +147,20 @@ class SvaraCoordinator(BaseCoordinator):
                 return False
 
             self._state.update(sensor_state)
+
+            if disconnect:
+                last_sync = self._last_periodic_clock_sync
+                now = dt_util.now()
+                if (
+                    last_sync is None
+                    or (now - last_sync).total_seconds() >= self._normal_poll_interval
+                ):
+                    _LOGGER.debug(
+                        "Syncing device clock for %s on polling cadence to %s",
+                        self.devicename,
+                        now.isoformat(),
+                    )
+                    await self._maybe_sync_periodic_clock()
 
             if disconnect:
                 await self._fan.disconnect()

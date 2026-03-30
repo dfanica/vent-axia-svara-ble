@@ -122,6 +122,14 @@
         "name": "Silent Hours"
       }
     },
+    "button": {
+      "refresh_now": {
+        "name": "Refresh Now"
+      },
+      "sync_clock": {
+        "name": "Sync Clock"
+      }
+    },
     "select": {
       "sensitivity_humidity": {
         "name": "Sensitivity Humidity"

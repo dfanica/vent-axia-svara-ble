@@ -2,6 +2,7 @@ from .characteristics import *
 
 from homeassistant.components import bluetooth
 from struct import pack, unpack
+import inspect
 import datetime
 from bleak.exc import BleakError
 import binascii
@@ -29,6 +30,8 @@ class BaseDevice:
         self._client: BleakClientWithServiceCache | None = None
         self._connect_lock = asyncio.Lock()
         self._disconnect_callback = None
+        self._expected_disconnect = False
+        self._expected_disconnect_reset_task: asyncio.Task[None] | None = None
         # Characteristic UUIDs (centralized in characteristics.py ideally)
         self.chars = {
             CHARACTERISTIC_APPEARANCE: "00002a01-0000-1000-8000-00805f9b34fb",  # Not used
@@ -56,18 +59,56 @@ class BaseDevice:
         """Set callback to be called when device disconnects unexpectedly."""
         self._disconnect_callback = callback
 
-    def _handle_disconnect(self, _client):
+    def _handle_disconnect(self, client):
         """Handle unexpected disconnection.
 
         Only logs the disconnection for debugging purposes.
         Reconnection is handled lazily on the next poll cycle.
         """
+        if client is not None and self._client is not None and client is not self._client:
+            _LOGGER.debug(
+                "Ignoring disconnect callback from superseded client for %s",
+                self._mac,
+            )
+            return
+
         _LOGGER.debug("Device %s disconnected, will reconnect on next poll", self._mac)
         self._client = None
+        if self._expected_disconnect:
+            self._cancel_expected_disconnect_reset()
+            self._expected_disconnect = False
+            return
+        if self._disconnect_callback is None:
+            return
+
+        result = self._disconnect_callback()
+        if inspect.isawaitable(result):
+            asyncio.create_task(result)
 
     async def authorize(self):
         await self.setAuth(self._pin)
 
+    def _cancel_expected_disconnect_reset(self) -> None:
+        """Cancel any pending expected-disconnect cleanup task."""
+        if (
+            self._expected_disconnect_reset_task
+            and not self._expected_disconnect_reset_task.done()
+        ):
+            self._expected_disconnect_reset_task.cancel()
+        self._expected_disconnect_reset_task = None
+
+    def _schedule_expected_disconnect_reset(self) -> None:
+        """Clear the expected-disconnect marker if no callback arrives."""
+        self._cancel_expected_disconnect_reset()
+
+        async def _reset_flag() -> None:
+            try:
+                await asyncio.sleep(1)
+                self._expected_disconnect = False
+            finally:
+                self._expected_disconnect_reset_task = None
+
+        self._expected_disconnect_reset_task = asyncio.create_task(_reset_flag())
 
     async def connect(self, timeout: int = 45) -> bool:
         """Establish a reliable connection using bleak-retry-connector."""
@@ -96,6 +137,8 @@ class BaseDevice:
                     retry_interval=1.0,
                     timeout=timeout,
                 )
+                self._cancel_expected_disconnect_reset()
+                self._expected_disconnect = False
                 _LOGGER.debug("Connected to %s", self._mac)
                 return True
             except Exception as err:
@@ -106,9 +149,12 @@ class BaseDevice:
     async def disconnect(self) -> None:
         if self._client:
             try:
+                self._expected_disconnect = True
                 await self._client.disconnect()
+                self._schedule_expected_disconnect_reset()
             except Exception as e:
                 _LOGGER.warning("Error disconnecting %s: %s", self._mac, e)
+                self._schedule_expected_disconnect_reset()
             finally:
                 self._client = None
 

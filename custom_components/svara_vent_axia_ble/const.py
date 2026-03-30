@@ -3,6 +3,7 @@ from homeassistant.const import Platform
 DOMAIN = "svara_vent_axia_ble"
 
 PLATFORMS = [
+    Platform.BUTTON,
     Platform.TIME,
     Platform.SENSOR,
     Platform.SWITCH,

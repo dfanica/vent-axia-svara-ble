@@ -197,8 +197,8 @@ class SvaraDevice(BaseDevice):
         for val in (humidity, light, trickle):
             if val % 25 != 0:
                 raise ValueError("Speeds should be multiples of 25")
-            if val > 2500 or val < 0:
-                raise ValueError("Speeds must be between 0 and 2500 rpm")
+            if val > 2401 or val < 0:
+                raise ValueError("Speeds must be between 0 and 2400 rpm")
 
         _LOGGER.debug(
             "Svara setFanSpeedSettings: %s %s %s", humidity, light, trickle
