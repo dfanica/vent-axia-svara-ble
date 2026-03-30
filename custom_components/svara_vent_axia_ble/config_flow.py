@@ -16,7 +16,6 @@ from homeassistant.helpers import device_registry as dr
 
 from .devices.base_device import BaseDevice
 from .const import (
-    CONF_CLOCK_SYNC,
     CONF_INTEGRATION_TITLE,
     CONF_MAC,
     CONF_NAME,
@@ -134,7 +133,6 @@ class SvaraVentAxiaOptionsFlowHandler(OptionsFlow):
             title = str(user_input[CONF_INTEGRATION_TITLE]).strip()
             if title:
                 options = {
-                    CONF_CLOCK_SYNC: bool(user_input[CONF_CLOCK_SYNC]),
                     CONF_SCAN_INTERVAL: int(user_input[CONF_SCAN_INTERVAL]),
                     CONF_SCAN_INTERVAL_FAST: int(user_input[CONF_SCAN_INTERVAL_FAST]),
                 }
@@ -166,10 +164,6 @@ def get_options_schema(config_entry: ConfigEntry) -> vol.Schema:
                 CONF_INTEGRATION_TITLE,
                 default=config_entry.title or CONFIG_ENTRY_NAME,
             ): cv.string,
-            vol.Required(
-                CONF_CLOCK_SYNC,
-                default=options.get(CONF_CLOCK_SYNC, True),
-            ): cv.boolean,
             vol.Required(
                 CONF_SCAN_INTERVAL,
                 default=options.get(

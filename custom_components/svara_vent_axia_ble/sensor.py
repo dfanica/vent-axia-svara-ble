@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime, time, timedelta
 
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
 from homeassistant.const import (
@@ -9,6 +10,7 @@ from homeassistant.const import (
     UnitOfVolumeFlowRate,
 )
 from homeassistant.helpers.entity import EntityCategory
+from homeassistant.util import dt as dt_util
 
 from .runtime import iter_entry_devices
 from .entity import SvaraVentAxiaEntity
@@ -16,15 +18,35 @@ from .entity_descriptions import SensorDescription
 
 _LOGGER = logging.getLogger(__name__)
 
-WEEKDAY_NAMES = {
-    1: "Mon",
-    2: "Tue",
-    3: "Wed",
-    4: "Thu",
-    5: "Fri",
-    6: "Sat",
-    7: "Sun",
-}
+
+def _infer_clock_datetime(value: dict[str, int]) -> datetime | None:
+    """Infer a local datetime from the device weekday and time."""
+    try:
+        weekday = int(value["day_of_week"])
+        hour = int(value["hour"])
+        minute = int(value["minute"])
+        second = int(value["second"])
+    except (KeyError, TypeError, ValueError):
+        return None
+
+    if weekday < 1 or weekday > 7:
+        return None
+    if hour < 0 or hour > 23 or minute < 0 or minute > 59 or second < 0 or second > 59:
+        return None
+
+    now = dt_util.now()
+    day_delta = weekday - now.isoweekday()
+    if day_delta > 3:
+        day_delta -= 7
+    elif day_delta < -3:
+        day_delta += 7
+
+    inferred_date = now.date() + timedelta(days=day_delta)
+    return datetime.combine(
+        inferred_date,
+        time(hour=hour, minute=minute, second=second),
+        tzinfo=now.tzinfo,
+    )
 
 ENTITIES = [
     SensorDescription(
@@ -98,6 +120,7 @@ ENTITIES = [
         entity_name="Clock",
         translation_key="clock",
         category=EntityCategory.DIAGNOSTIC,
+        device_class=SensorDeviceClass.TIMESTAMP,
     ),
     SensorDescription(
         key="alias",
@@ -132,11 +155,7 @@ class SvaraSensorEntity(SvaraVentAxiaEntity, SensorEntity):
         if isinstance(value, bool):
             return str(value)
         if self._key == "clock" and isinstance(value, dict):
-            weekday = WEEKDAY_NAMES.get(value.get("day_of_week"), str(value.get("day_of_week")))
-            return (
-                f"{weekday} "
-                f"{value.get('hour'):02d}:{value.get('minute'):02d}:{value.get('second'):02d}"
-            )
+            return _infer_clock_datetime(value)
         return value
 
     @property

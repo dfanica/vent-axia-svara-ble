@@ -1,5 +1,4 @@
 from .const import (
-    CONF_CLOCK_SYNC,
     CONF_MAC,
     CONF_PIN,
     CONF_SCAN_INTERVAL,
@@ -18,5 +17,5 @@ def getCoordinator(hass, entry, device_data, dev):
         device_data[CONF_PIN],
         options.get(CONF_SCAN_INTERVAL, device_data[CONF_SCAN_INTERVAL]),
         options.get(CONF_SCAN_INTERVAL_FAST, device_data[CONF_SCAN_INTERVAL_FAST]),
-        options.get(CONF_CLOCK_SYNC, True),
+        True,
     )

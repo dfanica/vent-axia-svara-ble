@@ -6,7 +6,7 @@ Unofficial Home Assistant integration for Vent-Axia Svara fans over Bluetooth Lo
 
 ## Release
 
-`v1.0.2` is the current HACS-ready release of this integration.
+`v1.0.3` is the current HACS-ready release of this integration.
 
 ## Features
 
@@ -14,7 +14,7 @@ Unofficial Home Assistant integration for Vent-Axia Svara fans over Bluetooth Lo
 - Setup with `MAC address + PIN`
 - Multiple fans under a single integration entry
 - Sensors and configuration entities for exposed Svara functions
-- Integration options for clock sync and scan intervals
+- Integration options for scan intervals
 - Diagnostics support for config entries and runtime state
 
 ## Supported Models
@@ -55,7 +55,6 @@ When adding a fan, the integration expects:
 After setup, open the integration options if you want to adjust:
 
 - integration title
-- clock sync behavior
 - normal scan interval
 - fast scan interval
 

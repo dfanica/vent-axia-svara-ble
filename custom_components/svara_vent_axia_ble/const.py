@@ -13,7 +13,6 @@ PLATFORMS = [
 
 CONF_ACTION = "action"
 CONF_ADD_DEVICE = "add_device"
-CONF_CLOCK_SYNC = "clock_sync"
 CONF_EDIT_DEVICE = "edit_device"
 CONF_INTEGRATION_TITLE = "integration_title"
 CONF_REMOVE_DEVICE = "remove_device"

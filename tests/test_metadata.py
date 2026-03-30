@@ -21,7 +21,7 @@ def test_manifest_has_release_version_and_codeowners() -> None:
     manifest = _load_json(MANIFEST_PATH)
 
     assert manifest["domain"] == "svara_vent_axia_ble"
-    assert manifest["version"] == "1.0.2"
+    assert manifest["version"] == "1.0.3"
     assert manifest["codeowners"] == ["@dfanica"]
 
 

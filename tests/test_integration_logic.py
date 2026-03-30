@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 from struct import pack
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from types import SimpleNamespace
 
 from tests.support import load_integration_module
@@ -548,3 +548,35 @@ def test_button_entity_dispatches_refresh_and_clock_sync_actions() -> None:
 
     assert coordinator.refresh_calls == 1
     assert coordinator.sync_calls == 1
+
+
+def test_clock_sensor_infers_local_datetime_from_device_time() -> None:
+    """Clock diagnostics should expose an inferred local datetime."""
+    sensor_module = load_integration_module("sensor")
+
+    inferred = sensor_module._infer_clock_datetime(
+        {
+            "day_of_week": 7,
+            "hour": 9,
+            "minute": 15,
+            "second": 30,
+        }
+    )
+
+    assert inferred == datetime(2026, 3, 29, 9, 15, 30)
+
+
+def test_clock_sensor_returns_none_for_invalid_device_time() -> None:
+    """Malformed device clock payloads should not raise from the sensor."""
+    sensor_module = load_integration_module("sensor")
+
+    inferred = sensor_module._infer_clock_datetime(
+        {
+            "day_of_week": 7,
+            "hour": 255,
+            "minute": 99,
+            "second": 30,
+        }
+    )
+
+    assert inferred is None

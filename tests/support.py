@@ -100,6 +100,18 @@ def load_integration_module(module_name: str):
 
     const = _module("homeassistant.const")
     const.CONF_DEVICES = "devices"
+    const.LIGHT_LUX = "lx"
+    const.PERCENTAGE = "%"
+    const.REVOLUTIONS_PER_MINUTE = "rpm"
+
+    class UnitOfTemperature:
+        CELSIUS = "C"
+
+    class UnitOfVolumeFlowRate:
+        CUBIC_METERS_PER_HOUR = "m3/h"
+
+    const.UnitOfTemperature = UnitOfTemperature
+    const.UnitOfVolumeFlowRate = UnitOfVolumeFlowRate
 
     class Platform:
         BUTTON = "button"
@@ -194,6 +206,20 @@ def load_integration_module(module_name: str):
         """Minimal ButtonEntity stub."""
 
     button.ButtonEntity = ButtonEntity
+
+    sensor = _module("homeassistant.components.sensor")
+
+    class SensorDeviceClass:
+        HUMIDITY = "humidity"
+        TEMPERATURE = "temperature"
+        ILLUMINANCE = "illuminance"
+        TIMESTAMP = "timestamp"
+
+    class SensorEntity:
+        """Minimal SensorEntity stub."""
+
+    sensor.SensorDeviceClass = SensorDeviceClass
+    sensor.SensorEntity = SensorEntity
 
     bluetooth = _module("homeassistant.components.bluetooth")
     bluetooth.async_ble_device_from_address = lambda *_args, **_kwargs: None

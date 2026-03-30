@@ -23,10 +23,10 @@ ENTITIES = [
     ButtonDescription(
         key="sync_clock",
         action="sync_clock",
-        entity_name="Sync Clock",
+        entity_name="Clock Sync",
         translation_key="sync_clock",
-        category=EntityCategory.CONFIG,
-        icon="mdi:clock-sync",
+        category=EntityCategory.DIAGNOSTIC,
+        icon="mdi:refresh",
     ),
 ]
 

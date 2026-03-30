@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.0.3
+
+- Refined the Home Assistant UI layout by moving clock sync into Diagnostics, moving trickle controls into Controls, and removing the synthetic `Trickle Continuous` helper switch.
+- Changed the clock diagnostic sensor to expose an inferred local datetime and hardened it against malformed device clock payloads.
+- Simplified clock-sync and BLE disconnect handling to reduce duplicate writes and avoid false reconnect/failure paths across delayed and stale callbacks.
+- Expanded behavior coverage for disconnect edge cases and clock timestamp inference.
+
 ## v1.0.2
 
 - Added device action buttons for `Refresh Now` and `Sync Clock` in Home Assistant.

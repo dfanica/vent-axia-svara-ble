@@ -20,24 +20,15 @@ ENTITIES = [
         attributes=boostmode_attribute,
     ),
     SwitchDescription(
-        key="trickle_continuous",
-        entity_name="Trickle Continuous",
-        translation_key="trickle_continuous",
-        category=EntityCategory.CONFIG,
-        icon="mdi:calendar-expand-horizontal",
-    ),
-    SwitchDescription(
         key="trickledays_weekdays",
         entity_name="Trickle Weekdays",
         translation_key="trickledays_weekdays",
-        category=EntityCategory.CONFIG,
         icon="mdi:calendar-week",
     ),
     SwitchDescription(
         key="trickledays_weekends",
         entity_name="Trickle Weekends",
         translation_key="trickledays_weekends",
-        category=EntityCategory.CONFIG,
         icon="mdi:calendar-weekend",
     ),
     SwitchDescription(
@@ -69,11 +60,6 @@ class SvaraSwitchEntity(SvaraVentAxiaEntity, SwitchEntity):
 
     @property
     def is_on(self):
-        if self._key == "trickle_continuous":
-            return bool(
-                self.coordinator.get_data("trickledays_weekdays")
-                and self.coordinator.get_data("trickledays_weekends")
-            )
         return self.coordinator.get_data(self._key)
 
     @property
@@ -94,17 +80,6 @@ class SvaraSwitchEntity(SvaraVentAxiaEntity, SwitchEntity):
         await self._write_value(0)
 
     async def _write_value(self, value):
-        if self._key == "trickle_continuous":
-            old_weekdays = self.coordinator.get_data("trickledays_weekdays")
-            old_weekends = self.coordinator.get_data("trickledays_weekends")
-            self.coordinator.set_data("trickledays_weekdays", value)
-            self.coordinator.set_data("trickledays_weekends", value)
-            if not await self.coordinator.write_data("trickledays_weekdays"):
-                self.coordinator.set_data("trickledays_weekdays", old_weekdays)
-                self.coordinator.set_data("trickledays_weekends", old_weekends)
-            self.async_schedule_update_ha_state(force_refresh=False)
-            return
-
         old_value = self.coordinator.get_data(self._key)
         self.coordinator.set_data(self._key, value)
         if not await self.coordinator.write_data(self._key):
